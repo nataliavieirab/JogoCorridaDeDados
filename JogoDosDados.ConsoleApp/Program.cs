@@ -9,8 +9,6 @@ class Program
     while (true)
     {
 
-      RunGame();
-
       Console.Write("\nDeseja continuar? [s/N]: ");
       string? userChoice = Console.ReadLine()?.ToUpper();
 
