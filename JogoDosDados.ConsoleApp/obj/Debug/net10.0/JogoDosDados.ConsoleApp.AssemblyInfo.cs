@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JogoDosDados.ConsoleApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29829eae1548ff4a647a57f3fa8d94fa8422dd68")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4612d5091deae7b5b84f0b7dbfcfaae3478bc032")]
 [assembly: System.Reflection.AssemblyProductAttribute("JogoDosDados.ConsoleApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JogoDosDados.ConsoleApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

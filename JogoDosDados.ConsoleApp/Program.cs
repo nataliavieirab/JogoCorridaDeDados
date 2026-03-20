@@ -12,12 +12,19 @@ class Program
       RunGame();
 
       Console.Write("\nDeseja continuar? [s/N]: ");
-      string? opcaoContinuar = Console.ReadLine()?.ToUpper();
+      string? userChoice = Console.ReadLine()?.ToUpper();
 
-      if (opcaoContinuar != "S")
+      if (userChoice != "S")
         break;
     }
 
+  }
+  static void ShowHeader()
+  {
+    Console.Clear();
+    Console.WriteLine("=======================================");
+    Console.WriteLine("JOGO CORRIDA DE DADOS");
+    Console.WriteLine("=======================================");
   }
 
   static int ThrowDice()
@@ -28,53 +35,6 @@ class Program
     return resultado;
   }
 
-  static void ShowHeader()
-  {
-    Console.Clear();
-    Console.WriteLine("=======================================");
-    Console.WriteLine("JOGO CORRIDA DE DADOS");
-    Console.WriteLine("=======================================");
-  }
-
-  static int ApplyEvents(int finishLine, int playerPosition)
-  {
-    const int extraAdvance = 3;
-    const int setbackPenalty = 2;
-
-    int[] advanceSpaces = { 5, 10, 15, 25 };
-    int[] setbackSpaces = { 7, 13, 20 };
-
-    if (advanceSpaces.Contains(playerPosition))
-    {
-
-      Console.WriteLine($"\n>> EVENTO: Avanço de {extraAdvance} casas!");
-      playerPosition += extraAdvance;
-
-      Console.WriteLine($"• Posição atual: {playerPosition} de {finishLine}");
-
-    }
-    else if (setbackSpaces.Contains(playerPosition))
-    {
-      Console.WriteLine($"\n>> EVENTO: Recuo de {setbackPenalty} casas!");
-      playerPosition -= setbackPenalty;
-
-      Console.WriteLine($"• Posição atual: {playerPosition} de {finishLine}");
-    }
-
-    return playerPosition;
-
-  }
-
-  static bool DidPlayerWon(int playerPosition, int finishLine)
-  {
-
-    if (playerPosition >= finishLine)
-      return true;
-
-    return false;
-
-  }
-
   static int UserTurn(int userPosition, int finishLine)
   {
     Console.WriteLine("\n---------- Rodada do Jogador ----------");
@@ -82,9 +42,9 @@ class Program
     Console.Write("\nPressione ENTER para lançar um dado...");
     Console.ReadLine();
 
-    int resultadoJogador = ThrowDice();
+    int playerRoll = ThrowDice();
 
-    userPosition += resultadoJogador;
+    userPosition += playerRoll;
 
     Console.WriteLine($"• Você está na posição {userPosition} de {finishLine}");
 
@@ -98,15 +58,43 @@ class Program
 
     Console.WriteLine("\n-------- Rodada do Computador ---------");
 
-    int resultadoComputador = ThrowDice();
+    int computerRoll = ThrowDice();
 
-    computerPosition += resultadoComputador;
+    computerPosition += computerRoll;
 
     Console.WriteLine($"• O computador está na posição: {computerPosition} de {finishLine}");
 
     computerPosition = ApplyEvents(finishLine, computerPosition);
 
     return computerPosition;
+
+  }
+
+  static int ApplyEvents(int finishLine, int playerPosition)
+  {
+    const int extraAdvance = 3;
+    const int setbackPenalty = 2;
+
+    int[] advanceSpaces = { 5, 10, 15, 25 };
+    int[] setbackSpaces = { 7, 13, 20 };
+
+    if (advanceSpaces.Contains(playerPosition))
+    {
+      Console.WriteLine($"\n>> EVENTO: Avanço de {extraAdvance} casas!");
+      playerPosition += extraAdvance;
+
+      Console.WriteLine($"• Posição atual: {playerPosition} de {finishLine}");
+    }
+
+    else if (setbackSpaces.Contains(playerPosition))
+    {
+      Console.WriteLine($"\n>> EVENTO: Recuo de {setbackPenalty} casas!");
+      playerPosition -= setbackPenalty;
+
+      Console.WriteLine($"• Posição atual: {playerPosition} de {finishLine}");
+    }
+
+    return playerPosition;
 
   }
 
@@ -127,7 +115,7 @@ class Program
 
       userPosition = UserTurn(userPosition, finishLine);
 
-      if (DidPlayerWon(userPosition, finishLine))
+      if (userPosition >= finishLine)
       {
         Console.WriteLine("\n>> Parabéns! Você alcançou a linha de chegada.");
         gameRunning = false;
@@ -140,7 +128,7 @@ class Program
 
       computerPosition = ComputerTurn(computerPosition, finishLine);
 
-      if (DidPlayerWon(computerPosition, finishLine))
+      if (computerPosition >= finishLine)
       {
         Console.WriteLine("\n>> Que pena! O computador alcançou a linha de chegada.");
         gameRunning = false;
@@ -153,4 +141,5 @@ class Program
 
     }
   }
+
 }
