@@ -5,25 +5,139 @@ class Program
 {
   static void Main(string[] args)
   {
+    const int finishLine = 30;
+    const int extraAdvance = 3;
+    const int setbackPenalty = 2;
+
+    RunGame(finishLine, extraAdvance, setbackPenalty);
+  }
+
+  static void RunGame(int finishLine, int extraAdvance, int setbackPenalty)
+  {
 
     while (true)
     {
+      int userPosition = 0;
+      int computerPosition = 0;
 
-      RunGame();
-      Console.Write("\nDeseja continuar? [s/N]: ");
-      string? userChoice = Console.ReadLine()?.ToUpper();
+      while (true)
+      {
+        userPosition = UserTurn(userPosition, finishLine, extraAdvance, setbackPenalty);
 
-      if (userChoice != "S")
+        if (userPosition >= finishLine)
+          break;
+
+        computerPosition = ComputerTurn(computerPosition, finishLine, extraAdvance, setbackPenalty);
+
+        if (computerPosition >= finishLine)
+          break;
+      }
+
+      if (!ShouldContinue())
         break;
     }
 
   }
-  static void ShowHeader()
+
+  static int UserTurn(int userPosition, int finishLine, int extraAdvance, int setbackPenalty)
+  {
+    do
+    {
+      ShowHeader("Jogador");
+
+      Console.Write("\nPressione ENTER para lançar um dado...");
+      Console.ReadLine();
+
+      int playerRoll = ThrowDice();
+
+      userPosition += playerRoll;
+
+      Console.WriteLine($"• Você está na posição {userPosition} de {finishLine}");
+
+      userPosition = ApplyEvents(finishLine, userPosition, extraAdvance, setbackPenalty);
+
+      if (userPosition >= finishLine)
+      {
+        Console.WriteLine("\n>> Parabéns! Você alcançou a linha de chegada.");
+
+        Console.Write("\nPressione ENTER para continuar...");
+        Console.ReadLine();
+
+        break;
+      }
+
+      if (playerRoll == 6)
+      {
+        Console.WriteLine("\n>> EVENTO: Rodada Extra! :)");
+
+        Console.Write("\nPressione ENTER para continuar...");
+        Console.ReadLine();
+
+        continue;
+      }
+
+      else
+      {
+        Console.Write("\nPressione ENTER para continuar...");
+        Console.ReadLine();
+        break;
+      }
+
+    } while (true);
+
+    return userPosition;
+  }
+
+  static int ComputerTurn(int computerPosition, int finishLine, int extraAdvance, int setbackPenalty)
+  {
+    do
+    {
+
+      ShowHeader("Computador");
+
+      int playerRoll = ThrowDice();
+
+      computerPosition += playerRoll;
+
+      Console.WriteLine($"• O computador está na posição: {computerPosition} de {finishLine}");
+
+      computerPosition = ApplyEvents(finishLine, computerPosition, extraAdvance, setbackPenalty);
+
+      if (computerPosition >= finishLine)
+      {
+        Console.WriteLine("\n>> Que pena! O computador ganhou.");
+
+        break;
+      }
+
+      if (playerRoll == 6)
+      {
+        Console.WriteLine("\n>> EVENTO: Rodada Extra! :)");
+
+        continue;
+      }
+
+      else
+      {
+        Console.Write("\nPressione ENTER para continuar...");
+        Console.ReadLine();
+
+        break;
+      }
+
+    } while (true);
+
+    return computerPosition;
+  }
+
+  static void ShowHeader(string playerName)
   {
     Console.Clear();
     Console.WriteLine("=======================================");
     Console.WriteLine("JOGO CORRIDA DE DADOS");
     Console.WriteLine("=======================================");
+
+    Console.WriteLine($"\n---------- Rodada do {playerName} ----------");
   }
 
   static int ThrowDice()
@@ -34,45 +148,8 @@ class Program
     return resultado;
   }
 
-  static int UserTurn(int userPosition, int finishLine)
+  static int ApplyEvents(int finishLine, int playerPosition, int extraAdvance, int setbackPenalty)
   {
-    Console.WriteLine("\n---------- Rodada do Jogador ----------");
-
-    Console.Write("\nPressione ENTER para lançar um dado...");
-    Console.ReadLine();
-
-    int playerRoll = ThrowDice();
-
-    userPosition += playerRoll;
-
-    Console.WriteLine($"• Você está na posição {userPosition} de {finishLine}");
-
-    userPosition = ApplyEvents(finishLine, userPosition);
-
-    return userPosition;
-  }
-
-  static int ComputerTurn(int computerPosition, int finishLine)
-  {
-
-    Console.WriteLine("\n-------- Rodada do Computador ---------");
-
-    int computerRoll = ThrowDice();
-
-    computerPosition += computerRoll;
-
-    Console.WriteLine($"• O computador está na posição: {computerPosition} de {finishLine}");
-
-    computerPosition = ApplyEvents(finishLine, computerPosition);
-
-    return computerPosition;
-
-  }
-
-  static int ApplyEvents(int finishLine, int playerPosition)
-  {
-    const int extraAdvance = 3;
-    const int setbackPenalty = 2;
 
     int[] advanceSpaces = { 5, 10, 15, 25 };
     int[] setbackSpaces = { 7, 13, 20 };
@@ -97,48 +174,14 @@ class Program
 
   }
 
-  static void RunGame()
+  static bool ShouldContinue()
   {
-    const int finishLine = 30;
-    int userPosition = 0;
-    int computerPosition = 0;
+    Console.Write("\nDeseja continuar? [s/N]: ");
+    string? userChoice = Console.ReadLine()?.ToUpper();
 
-    ShowHeader();
+    if (userChoice != "S")
+      return false;
 
-    bool gameRunning = true;
-
-    while (gameRunning)
-    {
-
-      ShowHeader();
-
-      userPosition = UserTurn(userPosition, finishLine);
-
-      if (userPosition >= finishLine)
-      {
-        Console.WriteLine("\n>> Parabéns! Você alcançou a linha de chegada.");
-        gameRunning = false;
-
-        continue;
-      }
-
-      Console.Write("\nPressione ENTER para continuar...");
-      Console.ReadLine();
-
-      computerPosition = ComputerTurn(computerPosition, finishLine);
-
-      if (computerPosition >= finishLine)
-      {
-        Console.WriteLine("\n>> Que pena! O computador alcançou a linha de chegada.");
-        gameRunning = false;
-
-        continue;
-      }
-
-      Console.Write("\nPressione ENTER para continuar...");
-      Console.ReadLine();
-
-    }
+    return true;
   }
-
 }

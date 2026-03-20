@@ -19,6 +19,9 @@ Regras do Jogo
 - Recuo (-2 casas):
   - Posições: 7, 13, 20
 
+- Rodada extra: 
+  - Se o competidor tirar 6 no dado, ele ganha uma rodada extra.
+
 5. O primeiro a alcançar ou ultrapassar a linha de chegada vence.
 
 ## Como utilizar
