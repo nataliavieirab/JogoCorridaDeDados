@@ -1,34 +1,42 @@
 using System.Security.Cryptography;
 
-static class Player
+class Player
 {
-
-  public static int position = 0;
+  public string Name { get; }
+  public int Position { get; private set; }
   private const int finishLine = 30;
   private const int extraAdvance = 3;
   private const int setbackPenalty = 2;
 
-  public static void ExecuteTurn()
+  public Player(string name)
+  {
+    Name = name;
+    Position = 0;
+  }
+
+  public void ExecuteTurn()
   {
     do
     {
       ShowHeader();
 
-      Console.Write("\nPressione ENTER para lançar um dado...");
-      Console.ReadLine();
+      if (Name == "Jogador")
+      {
+        Console.Write("\nPressione ENTER para lançar um dado...");
+        Console.ReadLine();
+      }
 
       int diceRollResult = ThrowDice();
 
-      position += diceRollResult;
+      Position += diceRollResult;
 
-      Console.WriteLine($"• Você está na posição {position} de {finishLine}");
+      ShowPosition();
 
-      position = ApplyEvents();
+      ApplyEvents();
 
-      if (position >= finishLine)
+      if (Won())
       {
-        Console.WriteLine("\n>> Parabéns! Você alcançou a linha de chegada.");
-
+        ShowVictoryMessage();
         break;
       }
 
@@ -36,8 +44,11 @@ static class Player
       {
         Console.WriteLine("\n>> EVENTO: Rodada Extra! :)");
 
-        Console.Write("\nPressione ENTER para continuar...");
-        Console.ReadLine();
+        if (Name == "Jogador")
+        {
+          Console.Write("\nPressione ENTER para lançar um dado...");
+          Console.ReadLine();
+        }
 
         continue;
       }
@@ -52,19 +63,26 @@ static class Player
     } while (true);
   }
 
-  public static bool Won()
+  private void ApplyEvents()
   {
-    return position >= finishLine;
-  }
+    int[] advanceSpaces = { 5, 10, 15, 25 };
+    int[] setbackSpaces = { 7, 13, 20 };
 
-  private static void ShowHeader()
-  {
-    Console.Clear();
-    Console.WriteLine("=======================================");
-    Console.WriteLine("JOGO CORRIDA DE DADOS");
-    Console.WriteLine("=======================================");
+    if (advanceSpaces.Contains(Position))
+    {
+      Console.WriteLine($"\n>> EVENTO: Avanço de {extraAdvance} casas!");
 
-    Console.WriteLine("\n---------- Rodada do Jogador ----------");
+      Position += extraAdvance;
+      Console.WriteLine($"• Posição atual: {Position} de {finishLine}");
+    }
+
+    else if (setbackSpaces.Contains(Position))
+    {
+      Console.WriteLine($"\n>> EVENTO: Recuo de {setbackPenalty} casas!");
+
+      Position -= setbackPenalty;
+      Console.WriteLine($"• Posição atual: {Position} de {finishLine}");
+    }
   }
 
   static int ThrowDice()
@@ -75,30 +93,35 @@ static class Player
     return result;
   }
 
-  static int ApplyEvents()
+  public bool Won()
   {
+    return Position >= finishLine;
+  }
 
-    int[] advanceSpaces = { 5, 10, 15, 25 };
-    int[] setbackSpaces = { 7, 13, 20 };
+  private void ShowHeader()
+  {
+    Console.Clear();
+    Console.WriteLine("=======================================");
+    Console.WriteLine("JOGO CORRIDA DE DADOS");
+    Console.WriteLine("=======================================");
 
-    if (advanceSpaces.Contains(position))
-    {
-      Console.WriteLine($"\n>> EVENTO: Avanço de {extraAdvance} casas!");
-      position += extraAdvance;
+    Console.WriteLine($"\n---------- Rodada do {Name} ----------");
+  }
 
-      Console.WriteLine($"• Posição atual: {position} de {finishLine}");
-    }
+  private void ShowVictoryMessage()
+  {
+    if (Name == "Jogador")
+      Console.WriteLine("\n>> Parabéns! Você alcançou a linha de chegada.");
+    else
+      Console.WriteLine("\n>> Que pena! O computador ganhou.");
+  }
 
-    else if (setbackSpaces.Contains(position))
-    {
-      Console.WriteLine($"\n>> EVENTO: Recuo de {setbackPenalty} casas!");
-      position -= setbackPenalty;
-
-      Console.WriteLine($"• Posição atual: {position} de {finishLine}");
-    }
-
-    return position;
-
+  private void ShowPosition()
+  {
+    if (Name == "Jogador")
+      Console.WriteLine($"• Você está na posição {Position} de {finishLine}");
+    else
+      Console.WriteLine($"• O computador está na posição {Position} de {finishLine}");
   }
 
 }

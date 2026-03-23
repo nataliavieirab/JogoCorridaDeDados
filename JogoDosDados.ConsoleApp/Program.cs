@@ -6,18 +6,19 @@ class Program
   {
     while (true)
     {
-      StartGame();
+      Player user = new Player("Jogador");
+      Player computer = new Player("Computador");
 
       while (true)
       {
-        Player.ExecuteTurn();
+        user.ExecuteTurn();
 
-        if (Player.Won())
+        if (user.Won())
           break;
 
-        Computer.ExecuteTurn();
+        computer.ExecuteTurn();
 
-        if (Computer.Won())
+        if (computer.Won())
           break;
       }
 
@@ -25,13 +26,6 @@ class Program
         break;
     }
   }
-
-  static void StartGame()
-  {
-    Player.position = 0;
-    Computer.position = 0;
-  }
-
   static bool ShouldContinue()
   {
     Console.Write("\nDeseja continuar? [s/N]: ");
